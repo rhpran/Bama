@@ -41,10 +41,10 @@ plt.scatter(x=x,y=y)
 
 from scipy import stats
 beta, beta0, r_value, p_value, std_err = stats.linregress(x,y)
-print("y = %f x + %f, r: %f, r-squared: %f,\np-value: %f, std_err: %f"
+print("y = %f x + %f, r: %f, r-squared: %f,\np-value: %f, std_err: %f")
 # % (beta, beta0, r_value, r_value**2, p_value, std_err))
 # plotting the line
-x=np.array(x)
+x = np.array(x)
 yhat = beta * x + beta0 # regression line
 plt.plot(x, yhat, 'r-', x, y,'o')
 plt.xlabel('Closeness Centrality')
@@ -98,11 +98,11 @@ plt.fill_between(low_proba_fvalues, 0, f.pdf(low_proba_fvalues, 1, 30),
 alpha=.8, label="P < 0.05")
 plt.show()
       
-spring_3D = nx.spring_layout(G,dim=3, seed=18)
-x_nodes = [spring_3D[i][0] for i in range(50)]# x-coordinates of nodes
-y_nodes = [spring_3D[i][1] for i in range(50)]# y-coordinates
-z_nodes = [spring_3D[i][2] for i in range(50)]# z-coordinates
-edge_list = G.edges()
+spring_3D = nx.spring_layout(G[1],dim=3, seed=18)
+x_nodes = [spring_3D[i][0] for i in range(len(G[1]))]# x-coordinates of nodes
+y_nodes = [spring_3D[i][1] for i in range(len(G[1]))]# y-coordinates
+z_nodes = [spring_3D[i][2] for i in range(len(G[1]))]# z-coordinates
+edge_list = G[1].edges()
 x_edges=[]
 y_edges=[]
 z_edges=[]
