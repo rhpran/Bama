@@ -97,6 +97,15 @@ low_proba_fvalues = fvalues[fvalues > f_at_proba_inf_95]
 plt.fill_between(low_proba_fvalues, 0, f.pdf(low_proba_fvalues, 1, 30),
 alpha=.8, label="P < 0.05")
 plt.show()
+
+import networkx as nx
+import matplotlib.pyplot as plt
+import pandas as pd
+import plotly.graph_objects as go
+%matplotlib inline
+G=nx.davis_southern_women_graph()
+nx.draw(G,with_labels="True")
+plt.show()
       
 spring_3D = nx.spring_layout(G[1],dim=3, seed=18)
 x_nodes = [spring_3D[i][0] for i in range(len(G[1]))]# x-coordinates of nodes
@@ -156,6 +165,124 @@ layout = go.Layout(title="3D Network",
                         ),
                 margin=dict(t=100),
                 hovermode='closest')
+data = [trace_edges, trace_nodes]
+fig = go.Figure(data=data, layout=layout)
+
+fig.show()
+
+import networkx as nx
+import matplotlib.pyplot as plt
+import pandas as pd
+import plotly.graph_objects as go
+%matplotlib inline
+G=nx.davis_southern_women_graph()
+nx.draw(G,with_labels="True")
+plt.show()
+
+
+# Commented out IPython magic to ensure Python compatibility.
+import numpy as np
+import matplotlib.pyplot as plt
+# %matplotlib inline
+x = np.linspace(0, 10, 50)
+sinus = np.sin(x)
+plt.plot(x, sinus)
+plt.show()
+plt.plot(x, sinus, "o")
+plt.show()
+
+# Commented out IPython magic to ensure Python compatibility.
+import numpy as np
+from scipy.stats import f
+import matplotlib.pyplot as plt
+# %matplotlib inline
+fvalues = np.linspace(.1, 5, 100)
+# pdf(x, df1, df2): Probability density function at x of F.
+plt.plot(fvalues, f.pdf(fvalues, 1, 30), 'b-', label="F(1, 30)")
+plt.plot(fvalues, f.pdf(fvalues, 5, 30), 'r-', label="F(5, 30)")
+plt.legend()
+# cdf(x, df1, df2): Cumulative distribution function of F.
+# ie.
+proba_at_f_inf_3 = f.cdf(3, 1, 30) # P(F(1,30) < 3)
+# ppf(q, df1, df2): Percent point function (inverse of cdf) at q of F.
+f_at_proba_inf_95 = f.ppf(.95, 1, 30) # q such P(F(1,30) < .95)
+assert f.cdf(f_at_proba_inf_95, 1, 30) == .95
+# sf(x, df1, df2): Survival function (1 - cdf) at x of F.
+proba_at_f_sup_3 = f.sf(3, 1, 30) # P(F(1,30) > 3)
+assert proba_at_f_inf_3 + proba_at_f_sup_3 == 1
+# p-value: P(F(1, 30)) < 0.05
+low_proba_fvalues = fvalues[fvalues > f_at_proba_inf_95]
+plt.fill_between(low_proba_fvalues, 0, f.pdf(low_proba_fvalues, 1, 30),
+alpha=.8, label="P < 0.05")
+plt.show()
+
+
+
+spring_3D = nx.spring_layout(G,dim=3, seed=18)
+x_nodes = [spring_3D[i][0] for i in G.nodes]# x-coordinates of nodes
+y_nodes = [spring_3D[i][1] for i in G.nodes]# y-coordinates
+z_nodes = [spring_3D[i][2] for i in G.nodes]# z-coordinates
+edge_list = G.edges()
+x_edges=[]
+y_edges=[]
+z_edges=[]
+
+#need to fill these with all of the coordiates
+for edge in edge_list:
+    #format: [beginning,ending,None]
+    x_coords = [spring_3D[edge[0]][0],spring_3D[edge[1]][0],None]
+    x_edges += x_coords
+
+    y_coords = [spring_3D[edge[0]][1],spring_3D[edge[1]][1],None]
+    y_edges += y_coords
+
+    z_coords = [spring_3D[edge[0]][2],spring_3D[edge[1]][2],None]
+    z_edges += z_coords
+
+trace_edges = go.Scatter3d(x=x_edges,
+                        y=y_edges,
+                        z=z_edges,
+                        mode='lines',
+                        line=dict(color='black', width=2),
+                        hoverinfo='none')
+
+
+#create a trace for the nodes
+trace_nodes = go.Scatter3d(x=x_nodes,
+                         y=y_nodes,
+                        z=z_nodes,
+                        mode='lines+markers+text',
+                        marker=dict(symbol='circle',
+                                    size=10,
+                                    color='blue', #color the nodes according to their community
+                                   #colorscale=['green','red'], #either green or mageneta
+                                    line=dict(color='blue', width=0.5)),
+                        text=np.array(G.nodes),
+                        hoverinfo='text', 
+                           textposition="top right",
+    textfont=dict(
+        family="sans serif",
+        size=18,
+        color="crimson"
+    )
+                        )
+axis = dict(showbackground=False,
+            showline=False,
+            zeroline=False,
+            showgrid=False,
+            showticklabels=False,
+            title='')
+layout = go.Layout(title="3D Network",
+                width=1000,
+                height=1000,
+                showlegend=False,
+                scene=dict(xaxis=dict(axis),
+                        yaxis=dict(axis),
+                        zaxis=dict(axis),
+                        ),
+                margin=dict(t=100),
+                hovermode='closest'
+                )
 data = [trace_edges, trace_nodes]
 fig = go.Figure(data=data, layout=layout)
 
