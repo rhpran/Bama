@@ -97,3 +97,66 @@ low_proba_fvalues = fvalues[fvalues > f_at_proba_inf_95]
 plt.fill_between(low_proba_fvalues, 0, f.pdf(low_proba_fvalues, 1, 30),
 alpha=.8, label="P < 0.05")
 plt.show()
+      
+spring_3D = nx.spring_layout(G,dim=3, seed=18)
+x_nodes = [spring_3D[i][0] for i in range(50)]# x-coordinates of nodes
+y_nodes = [spring_3D[i][1] for i in range(50)]# y-coordinates
+z_nodes = [spring_3D[i][2] for i in range(50)]# z-coordinates
+edge_list = G.edges()
+x_edges=[]
+y_edges=[]
+z_edges=[]
+
+#need to fill these with all of the coordiates
+for edge in edge_list:
+    #format: [beginning,ending,None]
+    x_coords = [spring_3D[edge[0]][0],spring_3D[edge[1]][0],None]
+    x_edges += x_coords
+
+    y_coords = [spring_3D[edge[0]][1],spring_3D[edge[1]][1],None]
+    y_edges += y_coords
+
+    z_coords = [spring_3D[edge[0]][2],spring_3D[edge[1]][2],None]
+    z_edges += z_coords
+
+trace_edges = go.Scatter3d(x=x_edges,
+                        y=y_edges,
+                        z=z_edges,
+                        mode='lines',
+                        line=dict(color='black', width=2),
+                        hoverinfo='none')
+
+
+#create a trace for the nodes
+trace_nodes = go.Scatter3d(x=x_nodes,
+                         y=y_nodes,
+                        z=z_nodes,
+                        mode='markers',
+                        marker=dict(symbol='circle',
+                                    size=10,
+                                    color='blue', #color the nodes according to their community
+                                   #colorscale=['green','red'], #either green or mageneta
+                                    line=dict(color='blue', width=0.5)),
+                        #text=club_labels,
+                        #hoverinfo='text'
+                        )
+axis = dict(showbackground=False,
+            showline=False,
+            zeroline=False,
+            showgrid=False,
+            showticklabels=False,
+            title='')
+layout = go.Layout(title="3D Network",
+                width=1000,
+                height=1000,
+                showlegend=False,
+                scene=dict(xaxis=dict(axis),
+                        yaxis=dict(axis),
+                        zaxis=dict(axis),
+                        ),
+                margin=dict(t=100),
+                hovermode='closest')
+data = [trace_edges, trace_nodes]
+fig = go.Figure(data=data, layout=layout)
+
+fig.show()
